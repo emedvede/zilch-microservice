@@ -1,0 +1,191 @@
+{
+	"variables": [],
+	"info": {
+		"name": "card",
+		"_postman_id": "eee42f4c-6882-f0b1-384e-cc2dc96843d9",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create card",
+			"request": {
+				"url": "http://localhost:8080/cards",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"currency\":\"EUR\",\n\"userId\":\"new-user\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get cards by user id",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/cards/user?userId=user1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cards",
+						"user"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "user1",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Typ",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "userId",
+						"value": "user1",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"currency\":\"EUR\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get all cards",
+			"request": {
+				"url": "http://localhost:8080/cards",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Typ",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "userId",
+						"value": "user1",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"currency\":\"EUR\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get card by id",
+			"request": {
+				"url": "http://localhost:8080/cards/1",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Typ",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "userId",
+						"value": "user1",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"currency\":\"EUR\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get transactions by card id",
+			"request": {
+				"url": "http://localhost:8080/cards/1/transactions",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Typ",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "userId",
+						"value": "user1",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"currency\":\"EUR\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create credit transaction",
+			"request": {
+				"url": "http://localhost:8080/transactions",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"globalId\":\"557\",\n\"currency\":\"EUR\",\n\"cardId\": \"2\",\n\"amount\":\"50\",\n\"transactionTypeId\":\"C\",\n\"description\":\"add money\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create debit transaction",
+			"request": {
+				"url": "http://localhost:8080/transactions",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"globalId\":\"558\",\n\"currency\":\"EUR\",\n\"cardId\": \"2\",\n\"amount\":\"20\",\n\"transactionTypeId\":\"D\",\n\"description\":\"add money\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
