@@ -1,6 +1,6 @@
 # ZILCH CARD MICROSERVICE
 
-A microservice which accepts incoming Purchases against Zilch Cards and manages Transactions;
+A microservice which accepts incoming Purchases against Zilch Cards and manages Transactions.
 
 
 ## Description
