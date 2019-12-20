@@ -79,7 +79,7 @@ see 'server.port' property
 ## Api endpoints
 Examples of all requests can be found in:
 ``` 
-zilch-microservice/src/main/resources/examples/card.postman_collection.json
+zilch-microservice/src/main/resources/examples/Zilch-microservice.postman_collection.json
 ``` 
 
 Http GET endpoints:
@@ -97,7 +97,7 @@ Gets list of cards by user
 Gets list of transactions by card id
 Some transactions are generated after the first start of the application by Flyway.
 
-5.  http://localhost:8080/zilch/cards/purchases
+5.  http://localhost:8080/zilch/purchases
 Lists all purchases
 
 6.  http://localhost:8080/zilch/cards/{id}/purchases

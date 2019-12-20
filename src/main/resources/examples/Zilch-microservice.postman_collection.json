@@ -1,0 +1,192 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Zilch-microservice",
+		"_postman_id": "baee5d8b-dd54-4173-153e-af1ba51ddb78",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/zilch/transactions",
+			"request": {
+				"url": "http://localhost:8080/zilch/transactions",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"globalId\":\"102\",\n\"currency\":\"GBP\",\n\"cardId\":\"1\",\n\"amount\":\"1000\",\n\"transactionTypeId\":\"C\",\n\"description\":\"add money\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/zilch/purchases",
+			"request": {
+				"url": "http://localhost:8080/zilch/purchases",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"globalId\":\"445\",\"shopId\": \"ADIDAS\",\"currency\":\"GBP\",\"cardId\": \"1\",\"amount\":\"100\",\"description\":\"bought sport shoes\"}\n"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/zilch/cards",
+			"request": {
+				"url": "http://localhost:8080/zilch/cards",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"currency\":\"GBP\", \"userId\":\"new-user\"}\n"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/zilch/cards",
+			"request": {
+				"url": "http://localhost:8080/zilch/cards",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"globalId\":\"101\",\n\"currency\":\"GBP\",\n\"cardId\":\"2\",\n\"walletId\": \"2\",\n\"amount\":\"100\",\n\"transactionTypeId\":\"C\",\n\"description\":\"add money\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/zilch/cards/1",
+			"request": {
+				"url": "http://localhost:8080/zilch/cards/1",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"globalId\":\"101\",\n\"currency\":\"GBP\",\n\"cardId\":\"2\",\n\"walletId\": \"2\",\n\"amount\":\"100\",\n\"transactionTypeId\":\"C\",\n\"description\":\"add money\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/zilch/cards/user?userId=new-user",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/zilch/cards/user?userId=new-user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"zilch",
+						"cards",
+						"user"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "new-user",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"globalId\":\"101\",\n\"currency\":\"GBP\",\n\"cardId\":\"2\",\n\"walletId\": \"2\",\n\"amount\":\"100\",\n\"transactionTypeId\":\"C\",\n\"description\":\"add money\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/zilch/cards/1/transactions",
+			"request": {
+				"url": "http://localhost:8080/zilch/cards/1/transactions",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"globalId\":\"101\",\n\"currency\":\"GBP\",\n\"cardId\":\"2\",\n\"walletId\": \"2\",\n\"amount\":\"100\",\n\"transactionTypeId\":\"C\",\n\"description\":\"add money\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/zilch/purchases",
+			"request": {
+				"url": "http://localhost:8080/zilch/purchases",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"globalId\":\"101\",\n\"currency\":\"GBP\",\n\"cardId\":\"2\",\n\"walletId\": \"2\",\n\"amount\":\"100\",\n\"transactionTypeId\":\"C\",\n\"description\":\"add money\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
