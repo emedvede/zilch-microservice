@@ -210,14 +210,7 @@ In the application there are no shared objects, so there should not be concurren
 ## Features not implemented
 1. Security (Information Exchange)
 
-Can be implemented using JWT.
-2. Authentication
- 
-Can be put on the NGINX level,if used.
-Or using Spring Security.
-3. Authorization
-
-Can be implemented using JWT.
+2. Not full test coverage, especially for Purchase workflow
 
 
 
