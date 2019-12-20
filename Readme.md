@@ -156,7 +156,7 @@ With the following JSON in the body:
 "currency":"GBP",
 "cardId": "2",
 "amount":"20",
-"transactionTypeId":"D",
+"transactionTypeId":"C",
 "description":"add money"
 }
 ``` 
