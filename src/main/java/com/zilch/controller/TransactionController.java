@@ -50,7 +50,7 @@ public class TransactionController {
     public String getCardTransactionsById( @PathVariable("id") int id) throws CardException, ClassNotFoundException {
         logger.debug("Called TransactionController.getCardTransactionsById with parameter cardId={}",id);
         List<Transaction> transactionList = transactionService.getTransactionsByCardId(id);
-        return new GsonBuilder().
+        return new GsonBuilder().registerTypeAdapterFactory(HibernateProxyTypeAdapter.FACTORY).
                 setExclusionStrategies(getExclusionStrategies()).
                 create().toJson(transactionList);
 
