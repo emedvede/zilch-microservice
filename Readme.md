@@ -17,6 +17,8 @@ A Purchase will only succeed if there are sufficient funds on Zilch Card for the
 
 Unique global transaction id must be provided when registering a transaction on an account. 
 
+Unique global Purchase id must be provided when creating a Purchase. 
+
 It is also possible get current balance of a Zilch Card and get transactions.
 
 ## Api requirements and running instructions
@@ -62,7 +64,7 @@ java -jar target/zilch-microservice-1.0-SNAPSHOT.jar
 ``` 
 8. To check that application started successfully go to:
 ``` 
-http://localhost:8080/test
+http://localhost:8080/zilch/test
 ``` 
 This should produce result:
 ``` 
@@ -95,6 +97,12 @@ Gets list of cards by user
 Gets list of transactions by card id
 Some transactions are generated after the first start of the application by Flyway.
 
+5.  http://localhost:8080/zilch/cards/purchases
+Lists all purchases
+
+6.  http://localhost:8080/zilch/cards/{id}/purchases
+Lists purchases by cardId
+
 Http POST endpoints:
 1. http://localhost:8080/zilch/cards
 With the following JSON in the body:
@@ -104,22 +112,48 @@ With the following JSON in the body:
 "userId":"{userId}"
 }
 ``` 
-Creates new card.
+Creates new Zilch card.
 e.g.
 ``` 
 {
-"currency":"EUR",
+"currency":"GBP",
 "userId":"new-user"
 }
 ``` 
-Will create new card with currency EUR and userId=new-user.
+Will create new card with currency GBP and userId=new-user.
 The currency id should be present in the reference table 'currency'.
 
-2. http://localhost:8080/zilch/transactions
+2. http://localhost:8080/zilch/purchases
+With the following JSON in the body:
+```
+{
+"globalId":"{id}",
+"shopId": "{shopId}",
+"currency":"{currency}",
+"cardId": "{cardId}",
+"amount":"{amount}",
+"description":"description"}
+```
+Creates new Purchase and associates 4 Debit transactions with it with equal amount.
+Purchase amount is equally spread among 4 transactions.
+One transactions will be executed against Zilch Card.
+Three other transactions will be scheduled for the future 3 weeks.
+In case there is not enough funds on Zilch card al transactions and Purchase will be discaded.
+e.g. 
+```
+{
+"globalId":"444",
+"shopId": "ZARA",
+"currency":"GBP",
+"cardId": "2",
+"amount":"100",
+"description":"bought trousers"}
+```
+3. http://localhost:8080/zilch/transactions
 With the following JSON in the body:
 ``` 
 {"globalId":"557",
-"currency":"EUR",
+"currency":"GBP",
 "cardId": "2",
 "amount":"20",
 "transactionTypeId":"D",
@@ -130,7 +164,7 @@ for credit transaction.
 ``` 
 will create credit transaction.
 {"globalId":"558",
-"currency":"EUR",
+"currency":"GBP",
 "cardId": "2",
 "amount":"20",
 "transactionTypeId":"D",

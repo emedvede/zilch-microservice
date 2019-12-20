@@ -53,7 +53,7 @@ public class TransactionControllerTest {
     }
 
     public static final Integer CURRENCY_ID = 1;
-    public static final String TEST_CURRENCY = "EUR";
+    public static final String TEST_CURRENCY = "GBP";
     public static final String LAST_UPDATED_BY = "user";
     public static final String USER = "user";
 
@@ -79,7 +79,7 @@ public class TransactionControllerTest {
         card = new Card(USER,new Currency(CURRENCY_ID, TEST_CURRENCY,LAST_UPDATED_BY),new BigDecimal(0),LAST_UPDATED_BY);
         card.setId(1);
         typeCredit = new TransactionType(CREDIT,"credit trn", LAST_UPDATED_BY);
-        transactionCredit = new Transaction(String.valueOf(globalIdCounter++) ,typeCredit,new BigDecimal(20),card,currency,"Credit transaction");
+        transactionCredit = new Transaction(String.valueOf(globalIdCounter++) ,typeCredit,new BigDecimal(20),card,null, currency,"Credit transaction");
         transactionCredit.setId(5);
     }
 
@@ -87,7 +87,7 @@ public class TransactionControllerTest {
     public void testGetcardTransactionsById_whenGetTransaction_thenReturnJsonArray() throws Exception {
         List<Transaction> allTransactions = Arrays.asList(transactionCredit);
 
-        given(service.getTransactionsBycardId(card.getId())).willReturn(allTransactions);
+        given(service.getTransactionsByCardId(card.getId())).willReturn(allTransactions);
 
         mvc.perform(get("/cards/" + card.getId()+ "/transactions")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -107,7 +107,7 @@ public class TransactionControllerTest {
         Map<String, String> dataMap = new HashMap<>();
         dataMap.put("globalId",transactionCredit.getGlobalId());
         dataMap.put("currency",transactionCredit.getCurrency().getName());
-        dataMap.put("cardId",transactionCredit.getcard().getId().toString());
+        dataMap.put("cardId",transactionCredit.getCard().getId().toString());
         dataMap.put("transactionTypeId",transactionCredit.getType().getId());
         dataMap.put("amount",transactionCredit.getAmount().toString());
         dataMap.put("description",transactionCredit.getDescription());
@@ -136,7 +136,7 @@ public class TransactionControllerTest {
         Map<String, String> dataMap = new HashMap<>();
         dataMap.put("globalId",transactionCredit.getGlobalId());
         //dataMap.put("currency",transactionCredit.getCurrency().getName());
-        dataMap.put("cardId",transactionCredit.getcard().getId().toString());
+        dataMap.put("cardId",transactionCredit.getCard().getId().toString());
         dataMap.put("transactionTypeId",transactionCredit.getType().getId());
         dataMap.put("amount",transactionCredit.getAmount().toString());
         dataMap.put("description",transactionCredit.getDescription());
@@ -161,7 +161,7 @@ public class TransactionControllerTest {
         Map<String, String> dataMap = new HashMap<>();
         //dataMap.put("globalId",transactionCredit.getGlobalId());
         dataMap.put("currency",transactionCredit.getCurrency().getName());
-        dataMap.put("cardId",transactionCredit.getcard().getId().toString());
+        dataMap.put("cardId",transactionCredit.getCard().getId().toString());
         dataMap.put("transactionTypeId",transactionCredit.getType().getId());
         dataMap.put("amount",transactionCredit.getAmount().toString());
         dataMap.put("description",transactionCredit.getDescription());
@@ -211,7 +211,7 @@ public class TransactionControllerTest {
         Map<String, String> dataMap = new HashMap<>();
         dataMap.put("globalId",transactionCredit.getGlobalId());
         dataMap.put("currency",transactionCredit.getCurrency().getName());
-        dataMap.put("cardId",transactionCredit.getcard().getId().toString());
+        dataMap.put("cardId",transactionCredit.getCard().getId().toString());
         //dataMap.put("transactionTypeId",transactionCredit.getType().getId());
         dataMap.put("amount",transactionCredit.getAmount().toString());
         dataMap.put("description",transactionCredit.getDescription());
@@ -236,7 +236,7 @@ public class TransactionControllerTest {
         Map<String, String> dataMap = new HashMap<>();
         dataMap.put("globalId",transactionCredit.getGlobalId());
         dataMap.put("currency",transactionCredit.getCurrency().getName());
-        dataMap.put("cardId",transactionCredit.getcard().getId().toString());
+        dataMap.put("cardId",transactionCredit.getCard().getId().toString());
         dataMap.put("transactionTypeId",transactionCredit.getType().getId());
         //dataMap.put("amount",transactionCredit.getAmount().toString());
         dataMap.put("description",transactionCredit.getDescription());

@@ -6,10 +6,7 @@ import com.zilch.entities.TransactionType;
 import com.zilch.exceptions.ErrorMessage;
 import com.zilch.exceptions.CardException;
 import com.zilch.helper.Helper;
-import com.zilch.repository.CurrencyRepository;
-import com.zilch.repository.TransactionRepository;
-import com.zilch.repository.TransactionTypeRepository;
-import com.zilch.repository.CardRepository;
+import com.zilch.repository.*;
 import com.zilch.helper.HelperImpl;
 import com.zilch.entities.Card;
 import org.hibernate.ObjectNotFoundException;
@@ -58,7 +55,7 @@ public class TransactionServiceTest {
             return new MethodValidationPostProcessor();
         }
     }
-    public static final String TEST_CURRENCY = "EUR";
+    public static final String TEST_CURRENCY = "GBP";
     public static final String LAST_UPDATED_BY = "user";
     public static final String USER = "user";
     static int globalIdCounter = 1;
@@ -92,6 +89,9 @@ public class TransactionServiceTest {
     @MockBean
     private CardService cardService;
 
+    @MockBean
+    private PurchaseRepository purchaseRepository;
+
     private Currency currency;
     private Card card1;
     private Card card2;
@@ -109,18 +109,18 @@ public class TransactionServiceTest {
         card2.setId(2);
         typeCredit = new TransactionType(credit,"credit trn", LAST_UPDATED_BY);
         typeDebit = new TransactionType(debit,"debit trn", LAST_UPDATED_BY);
-        transactionCredit = new Transaction(String.valueOf(globalIdCounter++) ,typeCredit,new BigDecimal(20),card1,currency,"Credit transaction");
+        transactionCredit = new Transaction(String.valueOf(globalIdCounter++) ,typeCredit, new BigDecimal(20),card1,null,currency,"Credit transaction");
         transactionCredit.setId(5);
-        transactionDebit = new Transaction(String.valueOf(globalIdCounter++) ,typeDebit,new BigDecimal(20),card2,currency,"Debit transaction");
+        transactionDebit = new Transaction(String.valueOf(globalIdCounter++) ,typeDebit,new BigDecimal(20),card2,null,currency,"Debit transaction");
         transactionDebit.setId(6);
 
 
         //getTransactionsBycardId
         Mockito.when(cardService.findById(card1.getId())).thenReturn(card1);
-        Mockito.when(transactionRepository.findBycard(card1))
+        Mockito.when(transactionRepository.findByCard(card1))
                 .thenReturn(Arrays.asList(transactionCredit));
 
-        Mockito.when(transactionRepository.findBycard(card2))
+        Mockito.when(transactionRepository.findByCard(card2))
                 .thenReturn(Arrays.asList(transactionCredit));
 
 
@@ -140,18 +140,18 @@ public class TransactionServiceTest {
     //public List<Transaction> getTransactionsBycardId(@NotNull Integer cardId) throws CardException;
     @Test
     public void testGetTransactionsBycardId_Success() throws CardException {
-        List<Transaction> found = transactionService.getTransactionsBycardId(card1.getId());
+        List<Transaction> found = transactionService.getTransactionsByCardId(card1.getId());
         assertNotNull(found);
         assertTrue(found.size() == 1);
         assertTrue(found.get(0).getId().equals(transactionCredit.getId()) );
      }
 
     @Test
-    public void testGetTransactionsBycardId_Failed() throws CardException {
+    public void testGetTransactionsByCardId_Failed() throws CardException {
         String error = String.format(ErrorMessage.NO_CARD_FOUND,card2.getId().toString());
         Mockito.when(cardService.findById(card2.getId())).thenThrow(new CardException(error,HttpStatus.BAD_REQUEST.value()));
         try {
-            List<Transaction> found = transactionService.getTransactionsBycardId(card2.getId());
+            List<Transaction> found = transactionService.getTransactionsByCardId(card2.getId());
             fail();
         } catch (CardException ex){
             assertEquals(ex.getMessage(),String.format(ErrorMessage.NO_CARD_FOUND,card2.getId().toString()));

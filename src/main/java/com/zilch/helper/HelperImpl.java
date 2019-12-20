@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Helper to check that some condition is TRUE and throw exception otherwise.
@@ -12,7 +14,7 @@ import javax.validation.constraints.NotNull;
  */
 @Validated
 @Component
-public class HelperImpl implements Helper<String,String> {
+public class HelperImpl implements Helper {
 
     /**
      * Throws CardException with errorMessage and errorCode if condition is not true
@@ -26,5 +28,13 @@ public class HelperImpl implements Helper<String,String> {
         if(!condition){
             throw new CardException(errorMessage, errorCode);
         }
+    }
+
+    @Override
+    public Date dateInAWeek(Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.WEEK_OF_MONTH, 1);
+        return c.getTime();
     }
 }

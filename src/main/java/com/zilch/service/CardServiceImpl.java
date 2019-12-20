@@ -66,10 +66,10 @@ class CardServiceImpl implements CardService{
     @Transactional(rollbackFor = CardException.class)
     @Override
     public Card findById(@NotNull Integer id) throws CardException {
-       Optional<Card> optionalcard =  cardRepository.findById(id);
+       Optional<Card> optionalCard =  cardRepository.findById(id);
        //validate
-       inputParametersValidator.conditionIsTrue(optionalcard.isPresent(),String.format(ErrorMessage.NO_CARD_FOUND,id.toString()),HttpStatus.BAD_REQUEST.value());
-       return optionalcard.get();
+       inputParametersValidator.conditionIsTrue(optionalCard.isPresent(),String.format(ErrorMessage.NO_CARD_FOUND,id.toString()),HttpStatus.BAD_REQUEST.value());
+       return optionalCard.get();
     }
 
     @Transactional(rollbackFor = CardException.class)

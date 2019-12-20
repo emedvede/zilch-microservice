@@ -5,6 +5,9 @@ import javax.validation.constraints.NotNull;
 
 import static com.zilch.exceptions.ErrorMessage.PART_NO_MANDATORY_FIELD;
 
+/**
+ * @author Elena Medvedeva
+ */
 public class CardModel {
 
     @NotBlank(message = "Field userId" + PART_NO_MANDATORY_FIELD)

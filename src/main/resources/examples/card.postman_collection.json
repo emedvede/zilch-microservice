@@ -21,7 +21,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\"currency\":\"EUR\",\n\"userId\":\"new-user\"\n}"
+					"raw": "{\n\"currency\":\"GBP\",\n\"userId\":\"new-user\"\n}"
 				},
 				"description": ""
 			},
@@ -66,7 +66,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\"currency\":\"EUR\"\n}"
+					"raw": "{\n\"currency\":\"GBP\"\n}"
 				},
 				"description": ""
 			},
@@ -91,7 +91,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\"currency\":\"EUR\"\n}"
+					"raw": "{\n\"currency\":\"GBP\"\n}"
 				},
 				"description": ""
 			},
@@ -116,7 +116,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\"currency\":\"EUR\"\n}"
+					"raw": "{\n\"currency\":\"GBP\"\n}"
 				},
 				"description": ""
 			},
@@ -141,7 +141,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\"currency\":\"EUR\"\n}"
+					"raw": "{\n\"currency\":\"GBP\"\n}"
 				},
 				"description": ""
 			},
@@ -161,7 +161,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"globalId\":\"557\",\n\"currency\":\"EUR\",\n\"cardId\": \"2\",\n\"amount\":\"50\",\n\"transactionTypeId\":\"C\",\n\"description\":\"add money\"\n}"
+					"raw": "{\"globalId\":\"557\",\n\"currency\":\"GBP\",\n\"cardId\": \"2\",\n\"amount\":\"50\",\n\"transactionTypeId\":\"C\",\n\"description\":\"add money\"\n}"
 				},
 				"description": ""
 			},
@@ -181,7 +181,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"globalId\":\"558\",\n\"currency\":\"EUR\",\n\"cardId\": \"2\",\n\"amount\":\"20\",\n\"transactionTypeId\":\"D\",\n\"description\":\"add money\"\n}"
+					"raw": "{\"globalId\":\"558\",\n\"currency\":\"GBP\",\n\"cardId\": \"2\",\n\"amount\":\"20\",\n\"transactionTypeId\":\"D\",\n\"description\":\"add money\"\n}"
 				},
 				"description": ""
 			},

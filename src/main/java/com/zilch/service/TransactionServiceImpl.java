@@ -1,12 +1,10 @@
 package com.zilch.service;
 
-import com.zilch.entities.Currency;
-import com.zilch.entities.Card;
-import com.zilch.entities.Transaction;
-import com.zilch.entities.TransactionType;
+import com.zilch.entities.*;
 import com.zilch.exceptions.ErrorMessage;
 import com.zilch.exceptions.CardException;
 import com.zilch.repository.CurrencyRepository;
+import com.zilch.repository.PurchaseRepository;
 import com.zilch.repository.TransactionRepository;
 import com.zilch.repository.TransactionTypeRepository;
 import com.zilch.helper.Helper;
@@ -26,7 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static com.zilch.exceptions.ErrorMessage.NUMBER_FORMAT_MISMATCH;
 
@@ -44,6 +44,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
     private CurrencyRepository currencyRepository;
+
+    @Autowired
+    private PurchaseRepository purchaseRepository;
 
     @Autowired
     private TransactionTypeRepository transactionTypeRepository;
@@ -76,21 +79,20 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Transactional(rollbackFor = CardException.class)
     @Override
-    public List<Transaction> getTransactionsBycardId(@NotNull Integer cardId) throws CardException {
+    public List<Transaction> getTransactionsByCardId(@NotNull Integer cardId) throws CardException {
         Card card = cardService.findById(cardId);
         if(card != null) {
-            return transactionRepository.findBycard(card);
+            return transactionRepository.findByCard(card);
         } else {
             throw new CardException(String.format(ErrorMessage.NO_CARD_FOUND,cardId.toString()), HttpStatus.BAD_REQUEST.value());
         }
     }
-
     /**
-     * Creates transaction for card.
+     * Creates transaction for Purchase and/or Card.
      * If there is not enough funds on card balance, throws CardException
      * If transactionTypeId='C' (credit transaction), takes absolute amount from  @param amount  and adds it to card balance.
      * If transactionTypeId='D' (debit transaction), takes absolute amount from  @param amount  and subtracts it from card balance.
-     * Valid refence to transaction type, currency, card should be provided.
+     * Valid reference to transaction type, currency, card should be provided.
      * Global id should be unique.
      * Transaction should have the same currency as card.
      * No additional SQL query is used to select currency by Id and transaction type by Id
@@ -109,32 +111,73 @@ public class TransactionServiceImpl implements TransactionService {
      */
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE, rollbackFor = CardException.class)
     @Override
-    public Transaction createTransaction(@NotBlank String globalId, @NotBlank  String currencyName, @NotBlank String cardId, @NotBlank String transactionTypeId, @NotBlank String amount, String description) throws CardException{
+    public Transaction createTransaction(@NotBlank String globalId, @NotBlank  String currencyName, @NotBlank String cardId, @NotBlank String transactionTypeId, @NotBlank String amount, String description) throws CardException {
+
+        //Check for unique transaction globalId happens due to entity constrains on Transaction.globalId (unique=true)
+
+        //Get currency reference
+        Currency currency = currencyRepository.findByName(currencyName);
+        String error = String.format(ErrorMessage.NO_CURRENCY_PRESENT, currencyName);
+        inputParametersValidator.conditionIsTrue(currency != null,error,HttpStatus.BAD_REQUEST.value());
+
+        //Get transactionType reference
+        TransactionType transactionType = transactionTypeRepository.getOne(transactionTypeId);
+
+        //Check card is present
+        Card card = cardService.findById(Integer.valueOf(cardId));
+        error = String.format(ErrorMessage.NO_CARD_FOUND, cardId);
+        inputParametersValidator.conditionIsTrue(card != null,error,HttpStatus.BAD_REQUEST.value());
+
+        return createTransaction(globalId, currency, card, transactionType,amount,null,true,new Date(), description);
+    }
+
+
+        /**
+         * Creates transaction for Purchase and/or Card.
+         * If there is not enough funds on card balance, throws CardException
+         * If transactionTypeId='C' (credit transaction), takes absolute amount from  @param amount  and adds it to card balance. Set submitted to true, and dueDate to current date.
+         * If transactionTypeId='D' (debit transaction), takes absolute amount from  @param amount  and subtracts it from card balance. Fills submitted and dueDate.
+         * Valid reference to transaction type, currency, card should be provided.
+         * Global id should be unique.
+         * Transaction should have the same currency as card.
+         * No additional SQL query is used to select currency by Id and transaction type by Id
+         * because JPARepository.getOne is used, which returns only reference for transaction object.
+         *
+         * Set isolation = Isolation.SERIALIZABLE in order to avoid concurrency issues (in case of deploying application to multiple hosts)
+         *
+         * @param globalId unique global id
+         * @param currency currency
+         * @param card  card
+         * @param transactionType transaction type - 'C' or 'D'
+         * @param amount transaction amount
+         * @param submitted if False, this means that transaction will happen in the future and no update of Card amount happens now.
+         * @param dueDate describes when will be transaction due (For scheduled transactions in the future)
+         * @param purchaseId valid purchaseId (in case transaction is a part of the purchase) or NULL
+         * @param description
+         * @return created transaction
+         * @throws CardException if couldn't create transaction
+         */
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE, rollbackFor = CardException.class)
+    @Override
+    public Transaction createTransaction(@NotBlank String globalId, @NotNull  Currency currency, @NotNull Card card, @NotNull TransactionType transactionType, @NotBlank String amount,@NotBlank String purchaseId, Boolean submitted, Date dueDate, String description) throws CardException{
         try {
-            //Check for unique transaction globalId happens due to entity constrains on Transaction.globalId (unique=true)
-
-            //Get currency reference
-            Currency currency = currencyRepository.findByName(currencyName);
-            String error = String.format(ErrorMessage.NO_CURRENCY_PRESENT, currencyName);
-            inputParametersValidator.conditionIsTrue(currency != null,error,HttpStatus.BAD_REQUEST.value());
-
-            //Get transactionType reference
-            TransactionType transactionType = transactionTypeRepository.getOne(transactionTypeId);
-
-            //Check card is present
-            Card card = cardService.findById(Integer.valueOf(cardId));
-            error = String.format(ErrorMessage.NO_CARD_FOUND, cardId);
-            inputParametersValidator.conditionIsTrue(card != null,error,HttpStatus.BAD_REQUEST.value());
-
             //check that transaction and card have the same currency
-            error = String.format(ErrorMessage.TRANSACTION_CURRENCY_NOT_EQ_card_CURRENCY,currency.getName(), card.getCurrency().getName());
+            String error = String.format(ErrorMessage.TRANSACTION_CURRENCY_NOT_EQ_CARD_CURRENCY,currency.getName(), card.getCurrency().getName());
             inputParametersValidator.conditionIsTrue(card.getCurrency().getId().equals(currency.getId()),error,HttpStatus.BAD_REQUEST.value());
 
-            //Update card, checks if there is enough funds for debit transaction. If not, throws CardException
-            card = cardService.updateCardAmount(card,amount,transactionTypeId.equalsIgnoreCase(transactionTypeCredit));
+            if(submitted) {
+                //Update card, checks if there is enough funds for debit transaction. If not, throws CardException
+                card = cardService.updateCardAmount(card, amount, transactionType.getId().equalsIgnoreCase(transactionTypeCredit));
+            }
+            Optional<Purchase> purchaseOptional = null;
+            Purchase purchase = null;
+            if(purchaseId != null){
+                purchaseOptional = purchaseRepository.findById(Integer.valueOf(purchaseId));
+                purchase = purchaseOptional.isPresent()?purchaseOptional.get():null;
+            }
 
             //Create transaction
-            Transaction transaction = new Transaction(globalId,transactionType,new BigDecimal(amount),card,currency,description,updatedBy);
+            Transaction transaction = new Transaction(globalId,transactionType,new BigDecimal(amount),card,purchase, currency,description,submitted,dueDate,updatedBy);
 
             return transactionRepository.save(transaction);
 

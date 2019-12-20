@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class CardRepositoryTest {
-    public static final String TEST_CURRENCY = "EUR";
+    public static final String TEST_CURRENCY = "GBP";
     public static final String LAST_UPDATED_BY = "user";
     public static final String USER = "user";
     public static final Integer CURRENCY_ID = 1;
@@ -80,7 +80,7 @@ public class CardRepositoryTest {
     }
 
     @Test
-    public void whenFindByUserId_thenReturncard() {
+    public void whenFindByUserId_thenReturnCard() {
         // when
         List<Card> found = cardRepository.findByUserId(USER);
         //then

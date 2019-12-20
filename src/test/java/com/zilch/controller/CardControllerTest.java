@@ -46,7 +46,7 @@ public class CardControllerTest {
 
     }
     public static final Integer CURRENCY_ID = 1;
-    public static final String TEST_CURRENCY = "EUR";
+    public static final String TEST_CURRENCY = "GBP";
     public static final String LAST_UPDATED_BY = "user";
     public static final String USER = "user";
 

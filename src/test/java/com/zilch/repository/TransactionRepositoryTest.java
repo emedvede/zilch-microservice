@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
 @DataJpaTest
 @PropertySource("classpath:application.properties")
 public class TransactionRepositoryTest {
-    public static final String TEST_CURRENCY = "EUR";
+    public static final String TEST_CURRENCY = "GBP";
     public static final String LAST_UPDATED_BY = "user";
     public static final String USER = "user";
 
@@ -86,7 +86,7 @@ public class TransactionRepositoryTest {
         entityManager.persist(typeDebit);
         entityManager.flush();
 
-        transaction = new Transaction(String.valueOf(globalIdCounter++),typeCredit,new BigDecimal(20),card1,currency,"Credit transaction");
+        transaction = new Transaction(String.valueOf(globalIdCounter++),typeCredit,new BigDecimal(20),card1,null,currency,"Credit transaction");
         entityManager.persist(transaction);
         entityManager.flush();
 
@@ -94,43 +94,43 @@ public class TransactionRepositoryTest {
 
     @Test
     public void testFindBycard() {
-        List<Transaction> trns = transactionRepository.findBycard(card1);
+        List<Transaction> trns = transactionRepository.findByCard(card1);
         assertTrue(trns.size() > 0);
-        assertTrue(trns.get(0).getcard().getId().equals(card1.getId()));
+        assertTrue(trns.get(0).getCard().getId().equals(card1.getId()));
         assertTrue(trns.get(0).getId().equals(transaction.getId()));
     }
 
     @Test
     public void testSave_Credit() {
         int counter = globalIdCounter++;
-        Transaction transaction = new Transaction(String.valueOf(counter),typeCredit,new BigDecimal(20),card2,currency,"Credit transaction");
+        Transaction transaction = new Transaction(String.valueOf(counter),typeCredit,new BigDecimal(20),card2,null,currency,"Credit transaction");
         Transaction found = transactionRepository.save(transaction);
         assertNotNull(found);
         assertTrue(found.getCurrency().getName().equals(TEST_CURRENCY));
         assertTrue(found.getAmount().equals(new BigDecimal(20)));
         assertTrue(found.getType().getId().equals(credit));
         assertTrue(found.getGlobalId().equals(String.valueOf(counter)));
-        assertTrue(found.getcard().getId().equals(card2.getId()));
+        assertTrue(found.getCard().getId().equals(card2.getId()));
     }
 
     @Test
     public void testSave_Debit() {
         int counter = globalIdCounter++;
-        Transaction transactionDebit = new Transaction(String.valueOf(counter),typeCredit,new BigDecimal(-10),card1,currency,"Credit transaction");
+        Transaction transactionDebit = new Transaction(String.valueOf(counter),typeCredit,new BigDecimal(-10),card1,null,currency,"Credit transaction");
         Transaction found = transactionRepository.save(transactionDebit );
         assertNotNull(found);
         assertTrue(found.getCurrency().getName().equals(TEST_CURRENCY));
         assertTrue(found.getAmount().equals(new BigDecimal(-10)));
         assertTrue(found.getType().getId().equals(credit));
         assertTrue(found.getGlobalId().equals(String.valueOf(counter)));
-        assertTrue(found.getcard().getId().equals(card1.getId()));
+        assertTrue(found.getCard().getId().equals(card1.getId()));
     }
 
     @Test
     public void whenSave_FailWrongCurrency() {
         Currency currency = currencyRepository.findByName("AAA");
         int counter = globalIdCounter++;
-        Transaction transaction = new Transaction(String.valueOf(counter),typeCredit,new BigDecimal(20),card2,currency,"Credit transaction");
+        Transaction transaction = new Transaction(String.valueOf(counter),typeCredit,new BigDecimal(20),card2,null,currency,"Credit transaction");
         try{
             Transaction found = transactionRepository.save(transaction);
             fail();
@@ -142,7 +142,7 @@ public class TransactionRepositoryTest {
     @Test
     public void whenSave_NotUniqueGlobalId() {
         int counter = globalIdCounter - 1;
-        Transaction transaction = new Transaction(String.valueOf(counter),typeCredit,new BigDecimal(20),card2,currency,"Credit transaction");
+        Transaction transaction = new Transaction(String.valueOf(counter),typeCredit,new BigDecimal(20),card2,null,currency,"Credit transaction");
         try{
             Transaction found = transactionRepository.save(transaction);
             entityManager.flush();
@@ -155,7 +155,7 @@ public class TransactionRepositoryTest {
     @Test
     public void whenSave_NoBalance() {
         int counter =  globalIdCounter++;
-        Transaction transaction = new Transaction(String.valueOf(counter),typeCredit,null,card2,currency,"Credit transaction");
+        Transaction transaction = new Transaction(String.valueOf(counter),typeCredit,null,card2,null,currency,"Credit transaction");
         try{
             Transaction found = transactionRepository.save(transaction);
             entityManager.flush();
@@ -171,7 +171,7 @@ public class TransactionRepositoryTest {
     public void whenSave_FailWrongcard() {
         Card card = cardRepository.getOne(100);
         int counter = globalIdCounter++;
-        Transaction transaction = new Transaction(String.valueOf(counter),typeCredit,new BigDecimal(20),card,currency,"Credit transaction");
+        Transaction transaction = new Transaction(String.valueOf(counter),typeCredit,new BigDecimal(20),card,null, currency,"Credit transaction");
         try{
             Transaction found = transactionRepository.save(transaction);
             entityManager.flush();
@@ -185,7 +185,7 @@ public class TransactionRepositoryTest {
     public void whenSave_FailWrongType() {
         TransactionType type = transactionTypeRepository.getOne("wrong");
         int counter = globalIdCounter++;
-        Transaction transaction = new Transaction(String.valueOf(counter),type,new BigDecimal(20),card2,currency,"Credit transaction");
+        Transaction transaction = new Transaction(String.valueOf(counter),type,new BigDecimal(20),card2,null, currency,"Credit transaction");
         try{
             Transaction found = transactionRepository.save(transaction);
             entityManager.flush();

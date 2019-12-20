@@ -34,16 +34,24 @@ public class TransactionController {
     @Autowired
     private Helper inputParametersValidator;
 
+    private  GsonExclusionStrategy[] getExclusionStrategies() throws ClassNotFoundException  {
+        return new GsonExclusionStrategy[]{
+                new GsonExclusionStrategy(ExcludeField.EXCLUDE_TRANSACTION_CARD),
+                new GsonExclusionStrategy(ExcludeField.EXCLUDE_PURCHASE_TRANSACTIONS),
+                new GsonExclusionStrategy(ExcludeField.EXCLUDE_PURCHASE_CARD)};
+
+    }
+
     @GetMapping(
             value = "/cards/{id}/transactions",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    public String getcardTransactionsById( @PathVariable("id") int id) throws CardException, ClassNotFoundException {
-        logger.debug("Called TransactionController.getcardTransactionsById with parameter cardId={}",id);
-        List<Transaction> transactionList = transactionService.getTransactionsBycardId(id);
+    public String getCardTransactionsById( @PathVariable("id") int id) throws CardException, ClassNotFoundException {
+        logger.debug("Called TransactionController.getCardTransactionsById with parameter cardId={}",id);
+        List<Transaction> transactionList = transactionService.getTransactionsByCardId(id);
         return new GsonBuilder().
-                setExclusionStrategies(new GsonExclusionStrategy(ExcludeField.EXCLUDE_CARD)).
+                setExclusionStrategies(getExclusionStrategies()).
                 create().toJson(transactionList);
 
     }
@@ -52,13 +60,13 @@ public class TransactionController {
      * Creates card transaction.
      * <p>
      * Example of  credit transaction JSON body
-     * {"globalId":"123","currency":"EUR","cardId": "1","transactionTypeId":"C","amount":"100","description":"add money"}
+     * {"globalId":"123","currency":"GBP","cardId": "1","transactionTypeId":"C","amount":"100","description":"add money"}
      *
      * Example of debit transaction JSON body
-     * {"globalId":"123","currency":"EUR","cardId": "1","transactionTypeId":"D","amount":"100","description":"withdraw money"}
+     * {"globalId":"123","currency":"GBP","cardId": "1","transactionTypeId":"D","amount":"100","description":"withdraw money"}
      * </p>
      * @param transactionModel contains input parameters in the following format:
-     *                {"globalId":"123","currency":"EUR","cardId": "1","transactionTypeId":"C","amount":"100","description":"add money"}
+     *                {"globalId":"123","currency":"GBP","cardId": "1","transactionTypeId":"C","amount":"100","description":"add money"}
      * @return created transaction in JSON format
      * @throws CardException when couldn't create transaction (e.g. globalId not unique, not enough funds on card balance, etc.)
      * @throws ClassNotFoundException
@@ -69,8 +77,8 @@ public class TransactionController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    public String createcardTransaction(@Valid @RequestBody TransactionModel transactionModel) throws CardException, ClassNotFoundException {
-        logger.debug("Called TransactionController.createcardTransaction" );
+    public String createCardTransaction(@Valid @RequestBody TransactionModel transactionModel) throws CardException, ClassNotFoundException {
+        logger.debug("Called TransactionController.createCardTransaction" );
 
 
         Transaction transaction = transactionService.createTransaction(transactionModel.getGlobalId(),transactionModel.getCurrency(),transactionModel.getcardId(),
@@ -78,7 +86,7 @@ public class TransactionController {
         logger.info("Transaction created with id=" + transaction.getId() );
 
         return new GsonBuilder().registerTypeAdapterFactory(HibernateProxyTypeAdapter.FACTORY).
-                setExclusionStrategies(new GsonExclusionStrategy(ExcludeField.EXCLUDE_TRANSACTIONS)).
+                setExclusionStrategies(new GsonExclusionStrategy(ExcludeField.EXCLUDE_CARD_TRANSACTIONS),new GsonExclusionStrategy(ExcludeField.EXCLUDE_TRANSACTION_PURCHASE)).
                 create().toJson(transaction);
     }
 }

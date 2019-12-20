@@ -56,7 +56,7 @@ public class CardServiceTest {
             return new MethodValidationPostProcessor();
         }
     }
-    public static final String TEST_CURRENCY = "EUR";
+    public static final String TEST_CURRENCY = "GBP";
     public static final String LAST_UPDATED_BY = "user";
     public static final String USER = "user";
     public static final Integer CURRENCY_ID = 1;

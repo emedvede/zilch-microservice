@@ -49,6 +49,9 @@ public class Card {
     @OneToMany(mappedBy = "card", fetch = FetchType.LAZY)
     private List<Transaction> transactions;
 
+    @OneToMany(mappedBy = "card", fetch = FetchType.LAZY)
+    private List<Purchase> purchases;
+
     public Card(){
     }
 
@@ -119,5 +122,13 @@ public class Card {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public List<Purchase> getPurchases() {
+        return purchases;
+    }
+
+    public void setPurchases(List<Purchase> purchases) {
+        this.purchases = purchases;
     }
 }

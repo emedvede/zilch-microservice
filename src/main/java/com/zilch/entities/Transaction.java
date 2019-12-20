@@ -27,7 +27,7 @@ public class Transaction {
     @Column(name = "global_id", unique = true, nullable = false)
     private String globalId;
 
-    @NotNull(message = "Trnansaction typeId must be provided")
+    @NotNull(message = "Transaction typeId must be provided")
     @ManyToOne
     @JoinColumn(name = "type_id")
     private TransactionType type;
@@ -40,6 +40,17 @@ public class Transaction {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_id")
     private Card card;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "purchase_id")
+    private Purchase purchase;
+
+    @Column(name = "submitted")
+    private Boolean submitted;
+
+    @Column(name = "due_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dueDate;
 
     @NotNull(message = "Transaction currency must be provided")
     @ManyToOne
@@ -58,19 +69,31 @@ public class Transaction {
 
     public Transaction(){ }
 
-    public Transaction( String globalId, TransactionType type, BigDecimal amount,  Card card, Currency currency, String description) {
+    public Transaction( String globalId, TransactionType type, BigDecimal amount,  Card card, Purchase purchase, Currency currency, String description, boolean submitted, Date dueDate) {
         this.globalId = globalId;
         this.type = type;
         this.amount = amount;
         this.card = card;
         this.currency = currency;
+        this.submitted = submitted;
+        this.purchase = purchase;
+        this.dueDate = dueDate;
         this.description = description;
         this.lastUpdated = new Date();
     }
 
-    public Transaction( String globalId, TransactionType type, BigDecimal amount,  Card card, Currency currency, String description, String lastUpdatedBy) {
-       this(globalId,type,amount,card,currency,description);
+    public Transaction( String globalId, TransactionType type, BigDecimal amount,  Card card, Purchase purchase, Currency currency, String description) {
+        this(globalId,type,amount,card,purchase, currency, description, true, new Date());
+    }
+
+    public Transaction( String globalId, TransactionType type, BigDecimal amount,  Card card, Purchase purchase, Currency currency, String description, String lastUpdatedBy) {
+       this(globalId,type,amount,card,purchase, currency, description);
        this.lastUpdatedBy = lastUpdatedBy;
+    }
+
+    public Transaction( String globalId, TransactionType type, BigDecimal amount,  Card card, Purchase purchase, Currency currency, String description,boolean submitted, Date dueDate, String lastUpdatedBy) {
+        this(globalId,type,amount,card,purchase, currency, description, submitted, dueDate);
+        this.lastUpdatedBy = lastUpdatedBy;
     }
     public Integer getId() {
         return id;
@@ -104,11 +127,11 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public Card getcard() {
+    public Card getCard() {
         return card;
     }
 
-    public void setcard(Card destcard) {
+    public void setCard(Card card) {
         this.card = card;
     }
 
@@ -120,12 +143,36 @@ public class Transaction {
         this.currency = currency;
     }
 
+    public Purchase getPurchase() {
+        return purchase;
+    }
+
+    public void setPurchase(Purchase purchase) {
+        this.purchase = purchase;
+    }
+
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Boolean getSubmitted() {
+        return submitted;
+    }
+
+    public void setSubmitted(Boolean submitted) {
+        this.submitted = submitted;
+    }
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(Date dueDate) {
+        dueDate = dueDate;
     }
 
     public Date getLastUpdated() {

@@ -15,6 +15,6 @@ import java.util.List;
  */
 @Transactional(rollbackOn = CardException.class)
 public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
-    List<Transaction> findBycard(Card card);
+    List<Transaction> findByCard(Card card);
     Transaction findByGlobalId(String globalId);
 }

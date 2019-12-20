@@ -8,7 +8,7 @@ import static com.zilch.exceptions.ErrorMessage.PART_NO_MANDATORY_FIELD;
 /**
  * @author Elena Medvedeva
  */
-public class TransactionModel {
+public class PurchaseModel {
 
     @NotBlank(message = "Field globalId" + PART_NO_MANDATORY_FIELD)
     @NotNull(message = "Field globalId" + PART_NO_MANDATORY_FIELD)
@@ -22,25 +22,24 @@ public class TransactionModel {
     @NotNull(message = "Field cardId" + PART_NO_MANDATORY_FIELD)
     private String cardId;
 
-    @NotBlank(message = "Field transactionTypeId" + PART_NO_MANDATORY_FIELD)
-    @NotNull(message = "Field transactionTypeId" + PART_NO_MANDATORY_FIELD)
-    private String transactionTypeId;
-
     @NotBlank(message = "Field amount" + PART_NO_MANDATORY_FIELD)
     @NotNull(message = "Field amount" + PART_NO_MANDATORY_FIELD)
     private String amount;
 
+    @NotBlank(message = "Field shopId" + PART_NO_MANDATORY_FIELD)
+    @NotNull(message = "Field shopId" + PART_NO_MANDATORY_FIELD)
+    private String shopId;
+
     private String description;
 
-    public TransactionModel(){}
+    public PurchaseModel(){}
 
-
-    public TransactionModel( String globalId, String currency, String cardId, String transactionTypeId, String amount, String description) {
+    public PurchaseModel(String globalId,String currency,String cardId, String amount, String shopId, String description){
         this.globalId = globalId;
         this.currency = currency;
         this.cardId = cardId;
-        this.transactionTypeId = transactionTypeId;
         this.amount = amount;
+        this.shopId = shopId;
         this.description = description;
     }
 
@@ -60,20 +59,12 @@ public class TransactionModel {
         this.currency = currency;
     }
 
-    public String getcardId() {
+    public String getCardId() {
         return cardId;
     }
 
-    public void setcardId(String cardId) {
+    public void setCardId(String cardId) {
         this.cardId = cardId;
-    }
-
-    public String getTransactionTypeId() {
-        return transactionTypeId;
-    }
-
-    public void setTransactionTypeId(String transactionTypeId) {
-        this.transactionTypeId = transactionTypeId;
     }
 
     public String getAmount() {
@@ -82,6 +73,14 @@ public class TransactionModel {
 
     public void setAmount(String amount) {
         this.amount = amount;
+    }
+
+    public String getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
     }
 
     public String getDescription() {
