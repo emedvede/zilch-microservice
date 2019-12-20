@@ -138,7 +138,7 @@ Creates new Purchase and associates 4 Debit transactions with it with equal amou
 Purchase amount is equally spread among 4 transactions.
 One transactions will be executed against Zilch Card.
 Three other transactions will be scheduled for the future 3 weeks.
-In case there is not enough funds on Zilch card al transactions and Purchase will be discaded.
+In case there is not enough funds on Zilch card all transactions and Purchase will be discaded.
 e.g. 
 ```
 {
@@ -162,7 +162,6 @@ With the following JSON in the body:
 ``` 
 for credit transaction.
 ``` 
-will create credit transaction.
 {"globalId":"558",
 "currency":"GBP",
 "cardId": "2",
